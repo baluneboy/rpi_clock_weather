@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# added these too
+my_config.py
+__pycache__
+.ipynb_checkpoints
