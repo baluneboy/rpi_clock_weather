@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import time
+import syslog
 from tkinter import *
 from tkinter import ttk
 from tkinter import font
@@ -25,8 +26,7 @@ def show_time():
 	sec_float = float(time.strftime("%S"))
 	yre = sec_float * C + D
 	
-	xmin2, xmax2 = 0.33, 0.66
-	E, F = (xmax2 - xmin2) / 60.0, xmin2
+	E, F = 0.00167, 0.47
 	xre2 = min_float * E + F
 
 	if (min_float % 10) == 0 and sec_float == 0:
@@ -39,9 +39,11 @@ def show_time():
 	weat_label.place(relx=xre2, rely=weat_yre, anchor=CENTER)
 
 	#print('%.3f, %.3f' % (xre, yre))
+
 	time_label.place(relx=xre, rely=yre, anchor=CENTER)
 	root.after(1000, show_time)
 
+syslog.syslog("Getting started with rpi_clock_weather.")
 
 root = Tk()
 root.attributes("-fullscreen", True)
@@ -55,10 +57,12 @@ fnt = font.Font(family='Helvetica', size=350, weight='bold')
 fnt2 = font.Font(family='Helvetica', size=120, weight='bold')
 time_str, weat_str = StringVar(), StringVar()
 time_str.set(time.strftime("%I:%M:%S"))
-weat_str.set('weather\nconditions')
+weat_str.set(get_weather())
 time_label = ttk.Label(root, textvariable=time_str, font=fnt, foreground="white", background="black")
 time_label.place(relx=0.5, rely=0.3, anchor=CENTER)
 weat_label = ttk.Label(root, textvariable=weat_str, font=fnt2, foreground="white", background="black")
 weat_label.place(relx=0.5, rely=0.7, anchor=CENTER)
+
+syslog.syslog("Starting tkinter main loop.")
 
 root.mainloop()
