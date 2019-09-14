@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import tkinter as tk
+import operator
 
 RED, YELLOW, GREEN = (255, 0, 0), (255, 255, 0), (0, 255, 0)
 CYAN, BLUE, MAGENTA = (0, 255, 255), (0, 0, 255), (255, 0, 255)
@@ -13,6 +14,11 @@ def _from_rgb(rgb):
     """
     return "#%02x%02x%02x" % rgb
 
+# rgb = (255, 255, 0)
+# print("rgb =", rgb)
+# hex = _from_rgb(rgb)
+# print("hex = ", hex)
+# raise SystemExit
 
 def show_color():
     COLOR += 1
@@ -21,7 +27,7 @@ def show_color():
     root.after(1000, show_color)
 
 
-class DaysToAgoColorIter(object):
+class DaysToGoIter(object):
 
     def __init__(self, start=0, steps=20, start_color=YELLOW, stop_color=RED):
         self.start = start
@@ -46,7 +52,7 @@ class DaysToAgoColorIter(object):
 
     def __next__(self):
         num = self.num
-        if num >= self.steps - 7:
+        if num >= self.steps - 10:
             val = self._max
         else:
             val = round(self._min + round(self.num * self.incr, 1))
@@ -55,10 +61,48 @@ class DaysToAgoColorIter(object):
         return num, rgb
 
 
+DAYS2GOCOLOR = {
+    20: (255, 255, 0),
+    19: (255, 242, 0),
+    18: (255, 229, 0),
+    17: (255, 217, 0),
+    16: (255, 204, 0),
+    15: (255, 191, 0),
+    14: (255, 179, 0),
+    13: (255, 166, 0),
+    12: (255, 153, 0),
+    11: (255, 140, 0),
+    10: (255, 0, 0),
+     9: (255, 0, 0),
+     8: (255, 0, 0),
+     7: (255, 0, 0),
+     6: (255, 0, 0),
+     5: (255, 0, 0),
+     4: (255, 0, 0),
+     3: (255, 0, 0),
+     2: (255, 0, 0),
+     1: (255, 0, 0),
+     0: (255, 0, 0),
+}
+
+
+def get_days2go_rgb(d2go):
+    """return RGB based on days to go input (int)"""
+    max_key = max(DAYS2GOCOLOR.items(), key=operator.itemgetter(1))[0]
+    if d2go > max_key:
+        rgb = (255, 255, 255)  # white
+    elif d2go < 0:
+        rgb = (255, 0, 255)  # magenta
+    else:
+        rgb = DAYS2GOCOLOR[d2go]
+    return rgb
+
+
+
 if __name__ == '__main__':
     count = 0
     count_days = 20
-    ci = DaysToAgoColorIter()
+    ci = DaysToGoIter()
     print(' 2go       R    G    B')
     while count <= count_days:
         count += 1

@@ -7,6 +7,8 @@ from tkinter import ttk
 from tkinter import font
 from my_weather import get_weather
 
+from get_last_cap1 import get_font_color
+
 
 def quit(*args):
 	root.destroy()
@@ -40,8 +42,14 @@ def show_time():
 
 	#print('%.3f, %.3f' % (xre, yre))
 
+	# check local six_count.ods file to see if paid up cap1 (change color as needed)
+	if time.strftime("%I:%M")[-2:] in ['00', '30']:
+		hex_code = get_font_color()
+		time_label['foreground'] = hex_code
+
 	time_label.place(relx=xre, rely=yre, anchor=CENTER)
 	root.after(1000, show_time)
+
 
 syslog.syslog("Getting started with rpi_clock_weather.")
 
@@ -60,6 +68,11 @@ time_str.set(time.strftime("%I:%M:%S"))
 weat_str.set(get_weather())
 time_label = ttk.Label(root, textvariable=time_str, font=fnt, foreground="white", background="black")
 time_label.place(relx=0.5, rely=0.3, anchor=CENTER)
+
+hex_code = get_font_color()
+print("hex_code = ", hex_code)
+time_label['foreground'] = hex_code
+
 weat_label = ttk.Label(root, textvariable=weat_str, font=fnt2, foreground="white", background="black")
 weat_label.place(relx=0.5, rely=0.7, anchor=CENTER)
 
